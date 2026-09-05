@@ -339,7 +339,7 @@ public class CommandExecutorModule {
      * 检查命令是否是危险命令
      */
     private static boolean isDangerousCommand(String command, MaidCommandConfig config) {
-        List<String> dangerousList = config.getDangerousCommands();
+        List<? extends String> dangerousList = config.getDangerousCommands();
         if (dangerousList == null || dangerousList.isEmpty()) {
             return false;
         }

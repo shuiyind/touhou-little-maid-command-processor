@@ -30,7 +30,7 @@ public class MaidCommandConfig {
     public final ModConfigSpec.ConfigValue<Integer> chatResponseCooldown;
     
     // Dangerous command blacklist
-    public final ModConfigSpec.ConfigValue<List<String>> dangerousCommands;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> dangerousCommands;
     public final ModConfigSpec.ConfigValue<Integer> minPermissionForDangerous;
     
     public MaidCommandConfig() {
@@ -45,13 +45,13 @@ public class MaidCommandConfig {
         
         // Dangerous command blacklist
         builder.comment("Dangerous command blacklist").push("dangerous_commands");
+        java.util.List<String> defaultDangerousCommands = java.util.Arrays.asList(
+            "/kill @a", "/op @a", "/deop @a", "/ban", "/pardon", 
+            "/gamemode 3", "/gamemode 0", "/difficulty hard", "/difficulty easy", 
+            "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
-            .defineList("dangerousCommands", 
-                java.util.Arrays.asList("/kill @a", "/op @a", "/deop @a", "/ban", "/pardon", 
-                    "/gamemode 3", "/gamemode 0", "/difficulty hard", "/difficulty easy", 
-                    "/gamerule doDayNightCycle false", "/gamerule keepInventory true"),
-                s -> s instanceof String);
+            .defineListInRange("dangerousCommands", defaultDangerousCommands, s -> s instanceof String);
         minPermissionForDangerous = builder
             .comment("Minimum permission level to execute dangerous commands")
             .defineInRange("minPermissionForDangerous", 2, 1, 3);
@@ -157,7 +157,7 @@ public class MaidCommandConfig {
         return chatResponseCooldown.get();
     }
     
-    public List<String> getDangerousCommands() {
+    public List<? extends String> getDangerousCommands() {
         return dangerousCommands.get();
     }
     

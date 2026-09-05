@@ -28,6 +28,7 @@ temp/
 
 # Libs (keep the maid mod jar for development)
 libs/*.jar
+!libs/touhoulittlemaid-*.jar
 !libs/.gitkeep
 
 # Temp directory
