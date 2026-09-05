@@ -1,0 +1,66 @@
+name: Issue Manager
+
+on:
+  issues:
+    types: [opened, closed]
+  pull_request:
+    types: [closed]
+
+jobs:
+  manage-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-close issue when linked PR is merged
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const issueNumber = pr.body.match(/#(\d+)/);
+            if (issueNumber) {
+              const issueNum = parseInt(issueNumber[1]);
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'all'
+              });
+              
+              const relatedIssue = issues.data.find(issue => issue.number === issueNum);
+              if (relatedIssue && relatedIssue.state === 'open') {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNum,
+                  state: 'closed'
+                });
+                console.log(`Closed issue #${issueNum} due to PR merge`);
+              }
+            }
+
+      - name: Label new issues
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const labels = [];
+            
+            // Auto-label based on title/content
+            if (issue.body.includes('bug') || issue.body.includes('Bug') || issue.body.includes('BUG')) {
+              labels.push('bug');
+            }
+            if (issue.body.includes('feature') || issue.body.includes('Feature') || issue.body.includes('enhancement')) {
+              labels.push('enhancement');
+            }
+            if (issue.body.includes('docs') || issue.body.includes('Docs') || issue.body.includes('documentation')) {
+              labels.push('documentation');
+            }
+            
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels
+              });
+            }
