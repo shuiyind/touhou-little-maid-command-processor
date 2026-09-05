@@ -2,6 +2,8 @@ package com.maidcommandprocessor.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.List;
+
 public class MaidCommandConfig {
     public final ModConfigSpec spec;
     
