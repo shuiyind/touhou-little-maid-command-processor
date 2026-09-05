@@ -298,6 +298,5 @@ LGPL-2.1
 ## 🤝 贡献
 欢迎提交Issue和Pull Request！
 
-## 📧 联系方式
-- NeoForge Discord: https://discord.neoforged.net/
-- 车万女仆社区：[添加链接]
+## 📧 反馈与问题
+如有问题或建议，请在 GitHub Issues 中提交！
