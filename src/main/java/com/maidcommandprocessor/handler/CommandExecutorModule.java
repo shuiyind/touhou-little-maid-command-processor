@@ -13,6 +13,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class CommandExecutorModule {
     
@@ -270,6 +271,18 @@ public class CommandExecutorModule {
     public static boolean canExecuteCommand(String command, PermissionModule.PermissionLevel permissionLevel, MaidCommandConfig config) {
         String baseCommand = getBaseCommand(command);
         
+        // 检查是否是危险命令
+        if (isDangerousCommand(command, config)) {
+            int minPermission = config.getMinPermissionForDangerous();
+            if (permissionLevel.getLevel() < minPermission) {
+                MaidCommandProcessor.LOGGER.warn(
+                    "Player lacks permission to execute dangerous command: {} (requires level {}, has level {})",
+                    command, minPermission, permissionLevel.getLevel()
+                );
+                return false;
+            }
+        }
+        
         if (permissionLevel == PermissionModule.PermissionLevel.ADMIN) {
             return true;
         }
@@ -320,6 +333,36 @@ public class CommandExecutorModule {
             }
         }
         return cmd;
+    }
+    
+    /**
+     * 检查命令是否是危险命令
+     */
+    private static boolean isDangerousCommand(String command, MaidCommandConfig config) {
+        List<String> dangerousList = config.getDangerousCommands();
+        if (dangerousList == null || dangerousList.isEmpty()) {
+            return false;
+        }
+        
+        String lowerCommand = command.toLowerCase().trim();
+        
+        // 检查完整命令匹配
+        for (String dangerousCmd : dangerousList) {
+            if (lowerCommand.startsWith(dangerousCmd.toLowerCase())) {
+                return true;
+            }
+        }
+        
+        // 检查基础命令匹配（如 /kill @a 应该匹配 /kill @e）
+        String baseCmd = getBaseCommand(command);
+        for (String dangerousCmd : dangerousList) {
+            String[] parts = dangerousCmd.toLowerCase().split("\\s+");
+            if (parts.length > 0 && baseCmd.equalsIgnoreCase(parts[0])) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     private static void setCooldown(UUID maidId, MaidCommandConfig config) {

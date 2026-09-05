@@ -1,11 +1,23 @@
 package com.maidcommandprocessor.handler;
 
 import com.maidcommandprocessor.MaidCommandProcessor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.MinecraftServer;
 
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PermissionModule {
+    
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String PERMISSIONS_FILE = "config/maid_command_processor_permissions.json";
+    private static volatile MinecraftServer server; // volatile 保证线程可见性
     
     public enum PermissionLevel {
         NONE(0, "无权限"),
@@ -25,10 +37,12 @@ public class PermissionModule {
         public String getName() { return name; }
     }
     
-    private static final Map<String, PermissionLevel> playerPermissions = new HashMap<>();
+    private static final Map<String, PermissionLevel> playerPermissions = new ConcurrentHashMap<>();
     
-    public static void initialize() {
-        MaidCommandProcessor.LOGGER.info("Permission Module initialized - default permission: NONE");
+    public static void initialize(MinecraftServer srv) {
+        server = srv;
+        loadPermissions();
+        MaidCommandProcessor.LOGGER.info("Permission Module initialized - loaded {} permission entries", playerPermissions.size());
     }
     
     public static PermissionLevel getPlayerPermission(net.minecraft.server.level.ServerPlayer player) {
@@ -40,7 +54,6 @@ public class PermissionModule {
         }
         
         // 服务器主人（单人游戏）自动获得 ADMIN 权限
-        MinecraftServer server = MaidCommandProcessor.server;
         if (server != null && server.isSingleplayer() && server.isSingleplayerOwner(player.getGameProfile())) {
             return PermissionLevel.ADMIN;
         }
@@ -76,6 +89,10 @@ public class PermissionModule {
         
         String targetName = target.getName().getString();
         playerPermissions.put(targetName, newLevel);
+        
+        // 自动保存权限数据
+        savePermissions();
+        
         MaidCommandProcessor.LOGGER.info(
             "ADMIN [{}] set permission for [{}] to {}",
             operator.getName().getString(),
@@ -112,6 +129,10 @@ public class PermissionModule {
         
         String revokeeName = revokee.getName().getString();
         playerPermissions.remove(revokeeName); // 移除权限，回到 NONE
+        
+        // 自动保存权限数据
+        savePermissions();
+        
         MaidCommandProcessor.LOGGER.info(
             "ADVANCED [{}] revoked permission from BASIC [{}], now {}",
             revoker.getName().getString(),
@@ -153,5 +174,71 @@ public class PermissionModule {
      */
     public static Map<String, PermissionLevel> getAllPermissions() {
         return Collections.unmodifiableMap(playerPermissions);
+    }
+    
+    /**
+     * 加载权限数据从文件
+     */
+    private static void loadPermissions() {
+        try {
+            Path filePath = Path.of(PERMISSIONS_FILE);
+            if (!Files.exists(filePath)) {
+                MaidCommandProcessor.LOGGER.info("Permission file not found, starting with empty permissions");
+                return;
+            }
+            
+            String json = Files.readString(filePath);
+            Type type = new TypeToken<Map<String, String>>() {}.getType();
+            Map<String, String> permissionMap = GSON.fromJson(json, type);
+            
+            if (permissionMap != null) {
+                for (Map.Entry<String, String> entry : permissionMap.entrySet()) {
+                    try {
+                        PermissionLevel level = PermissionLevel.valueOf(entry.getValue());
+                        playerPermissions.put(entry.getKey(), level);
+                    } catch (IllegalArgumentException e) {
+                        MaidCommandProcessor.LOGGER.warn(
+                            "Invalid permission level '{}' for player '{}'",
+                            entry.getValue(), entry.getKey()
+                        );
+                    }
+                }
+                MaidCommandProcessor.LOGGER.info(
+                    "Loaded {} permissions from {}",
+                    playerPermissions.size(), PERMISSIONS_FILE
+                );
+            }
+        } catch (Exception e) {
+            MaidCommandProcessor.LOGGER.error("Failed to load permissions: {}", e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * 保存权限数据到文件
+     */
+    public static void savePermissions() {
+        try {
+            Path filePath = Path.of(PERMISSIONS_FILE);
+            Path parentDir = filePath.getParent();
+            if (parentDir != null) {
+                Files.createDirectories(parentDir);
+            }
+            
+            // 转换为字符串映射
+            Map<String, String> stringMap = new HashMap<>();
+            for (Map.Entry<String, PermissionLevel> entry : playerPermissions.entrySet()) {
+                stringMap.put(entry.getKey(), entry.getValue().name());
+            }
+            
+            String json = GSON.toJson(stringMap);
+            Files.writeString(filePath, json);
+            
+            MaidCommandProcessor.LOGGER.info(
+                "Saved {} permissions to {}",
+                playerPermissions.size(), PERMISSIONS_FILE
+            );
+        } catch (Exception e) {
+            MaidCommandProcessor.LOGGER.error("Failed to save permissions: {}", e.getMessage(), e);
+        }
     }
 }

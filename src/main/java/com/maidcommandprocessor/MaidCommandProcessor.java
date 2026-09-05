@@ -56,7 +56,6 @@ public class MaidCommandProcessor {
         event.enqueueWork(() -> {
             LOGGER.info("Maid Command Processor - Performing common setup");
             CommandExecutorModule.initialize();
-            PermissionModule.initialize();
             LittleMaidToolRegistry.initialize();
             MaidToolRegistry.registerTools();
             ModRegistryManager.initialize();
@@ -66,6 +65,7 @@ public class MaidCommandProcessor {
     @SubscribeEvent
     private void serverAboutToStart(ServerAboutToStartEvent event) {
         server = event.getServer();
+        PermissionModule.initialize(server);
         LittleMaidToolRegistry.registerTools();
     }
     

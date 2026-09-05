@@ -115,6 +115,11 @@ public class LittleMaidToolRegistry {
     }
     
     public static void registerTools() {
+        if (initialized) {
+            MaidCommandProcessor.LOGGER.info("LittleMaid tools already registered, skipping duplicate registration");
+            return;
+        }
+        
         MaidCommandProcessor.LOGGER.info("Registering tools with LittleMaid AI system");
         
         // In a real implementation, this would register tools with LittleMaid's AI system
@@ -128,6 +133,8 @@ public class LittleMaidToolRegistry {
                 );
             }
         }
+        
+        initialized = true;
     }
     
     public static MaidTool getTool(String name) {

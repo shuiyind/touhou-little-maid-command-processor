@@ -214,7 +214,13 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
         String targetName = target.getName().getString();
         PermissionLevel currentLevel = PermissionModule.getPlayerPermission(target);
         
-        PermissionModule.setPlayerPermission(operator, target, targetLevel);
+        boolean success = PermissionModule.setPlayerPermission(operator, target, targetLevel);
+        
+        if (!success) {
+            String response = "Failed to set permission for '" + targetName + "': Operator is not ADMIN\n" + description;
+            MaidCommandProcessor.LOGGER.warn(response);
+            return callback.addToolResult(toolId, response);
+        }
         
         String response = "Successfully set permission for '" + targetName + "': " + 
             currentLevel.getName() + " → " + targetLevel.getName() + "\n" + description;
