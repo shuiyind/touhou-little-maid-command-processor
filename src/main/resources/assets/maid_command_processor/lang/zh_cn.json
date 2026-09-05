@@ -1,0 +1,37 @@
+{
+  "maid_command_processor.info.title": "女仆指令处理器",
+  "maid_command_processor.info.version": "版本: %s",
+  "maid_command_processor.info.help": "帮助: 使用 /maidcommand 管理女仆指令",
+  "maid_command_processor.info.usage": "用法: /maidcommand execute <指令>",
+  "maid_command_processor.info.commands": "已加载 %d 个原版指令和 %d 个女仆模组指令",
+  
+  "maid_command_processor.command.success": "成功！已执行: %s",
+  "maid_command_processor.command.failure": "执行失败: %s",
+  "maid_command_processor.command.error": "错误: %s",
+  "maid_command_processor.command.test_result": "女仆指令处理器运行正常！",
+  "maid_command_processor.command.test_config": "配置加载成功",
+  "maid_command_processor.command.test_enable": "女仆指令已启用: %s",
+  
+  "maid_command_processor.error.commands_disabled": "女仆指令当前已禁用",
+  "maid_command_processor.error.command_not_allowed": "不允许执行此指令: %s",
+  "maid_command_processor.error.on_cooldown": "指令冷却中，请稍候",
+  "maid_command_processor.error.execution_failed": "执行失败: %s",
+  
+  "maid_command_processor.executor.success": "指令执行成功: %s",
+  "maid_command_processor.executor.failure": "指令执行失败: %s",
+  "maid_command_processor.executor.error": "执行指令时出错: %s",
+  "maid_command_processor.executor.permission": "玩家 %s 的权限等级: %s (等级 %d)",
+  "maid_command_processor.executor.vanilla_commands": "可用的原版指令：",
+  "maid_command_processor.executor.maid_commands": "可用的女仆模组指令：",
+  
+  "maid_command_processor.permissions.title": "权限系统",
+  "maid_command_processor.permissions.info": "权限等级: 无, 基础, 高级, 白名单, 管理员",
+  
+  "maid_command_processor.commands.title": "指令兼容性",
+  "maid_command_processor.commands.vanilla_count": "原版指令: %d 个",
+  "maid_command_processor.commands.maid_count": "女仆模组指令: %d 个",
+  
+  "maid_command_processor.ai_chat.matched": "AI匹配到指令: %s",
+  "maid_command_processor.ai_chat.no_match": "未找到匹配的指令: %s",
+  "maid_command_processor.ai_chat.executing": "正在执行指令: %s"
+}
