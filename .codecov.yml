@@ -1,0 +1,37 @@
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...100%"
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 0%
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: true
+      loop: true
+      method: false
+      macro: false
+
+comment:
+  layout: "header, diff, flags, components"
+  behavior: default
+  require_changes: true
+
+flags:
+  java-unit-tests:
+    paths:
+      - maid-command-processor/src/test/
+    carryforward: true

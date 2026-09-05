@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.146'
     id 'idea'
+    id 'jacoco'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -198,5 +199,31 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+// JaCoCo code coverage configuration
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
+}
+
+jacocoTestReport {
+    dependsOn 'test'
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'CLASS'
+                minimum = 0.30
+            }
+        }
     }
 }
