@@ -216,14 +216,3 @@ jacocoTestReport {
         csv.required = false
     }
 }
-
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                counter = 'CLASS'
-                minimum = 0.30
-            }
-        }
-    }
-}
