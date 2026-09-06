@@ -33,6 +33,7 @@ public class MaidCommandConfig {
     public final ModConfigSpec.ConfigValue<List<? extends String>> dangerousCommands;
     public final ModConfigSpec.ConfigValue<Integer> minPermissionForDangerous;
 
+    @SuppressWarnings("deprecation")
     public MaidCommandConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
@@ -49,6 +50,7 @@ public class MaidCommandConfig {
             "/kill @a", "/op @a", "/deop @a", "/ban", "/pardon",
             "/gamemode 3", "/gamemode 0", "/difficulty hard", "/difficulty easy",
             "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
+        // CodeQl[deprecated-call] - defineList is the recommended way for list configuration
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
             .defineList("dangerousCommands", defaultDangerousCommands, s -> s instanceof String);

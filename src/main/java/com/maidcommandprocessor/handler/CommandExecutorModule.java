@@ -405,7 +405,8 @@ public class CommandExecutorModule {
     /**
      * 验证并修复命令格式
      */
-    private static String validateAndFixCommand(String command, ServerPlayer player) {
+    // CodeQl[unused-parameter] - player is reserved for future validation
+    private static String validateAndFixCommand(String command, @SuppressWarnings("unused") ServerPlayer player) {
         // 检查是否是 /give 命令
         if (command.startsWith("/give ")) {
             // 修复 NBT 标签位置问题
