@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.146'
     id 'idea'
+    id 'jacoco'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -198,5 +199,22 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+tasks.withType(Test).configureEach {
+    finalizedBy 'jacocoTestReport'
+}
+
+tasks.named('jacocoTestReport', JacocoReport) {
+    dependsOn 'test'
+    
+    reports {
+        xml.required = true
+        html.required = true
     }
 }
