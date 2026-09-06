@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 public class AIChatIntegration {
     
     private static final Map<String, CommandPattern> commandPatterns = new LinkedHashMap<>();
+    private static final Map<String, ItemPattern> itemPatterns = new LinkedHashMap<>();
     
     static {
         initializePatterns();
@@ -38,6 +39,22 @@ public class AIChatIntegration {
         public String getCommand() { return command; }
         public String getDescription() { return description; }
         public PermissionLevel getRequiredPermission() { return requiredPermission; }
+    }
+    
+    public static class ItemPattern {
+        private final String pattern;
+        private final String itemName;
+        private final String description;
+        
+        public ItemPattern(String pattern, String itemName, String description) {
+            this.pattern = pattern;
+            this.itemName = itemName;
+            this.description = description;
+        }
+        
+        public String getPattern() { return pattern; }
+        public String getItemName() { return itemName; }
+        public String getDescription() { return description; }
     }
     
     private static void initializePatterns() {
@@ -83,7 +100,26 @@ public class AIChatIntegration {
             PermissionLevel.ADVANCED
         ));
         
-        MaidCommandProcessor.LOGGER.info("Initialized {} command patterns", commandPatterns.size());
+        itemPatterns.put("diamond_sword", new ItemPattern(
+            "(?:钻石|diamond)\\s*(?:剑|sword|武器)",
+            "diamond_sword",
+            "Diamond sword pattern"
+        ));
+        
+        itemPatterns.put("iron_armor", new ItemPattern(
+            "(?:铁|iron)\\s*(?:甲|armor|装备)",
+            "iron_armor",
+            "Iron armor pattern"
+        ));
+        
+        itemPatterns.put("gold_food", new ItemPattern(
+            "(?:金|gold)\\s*(?:食物|food|面包)",
+            "gold_ingot",
+            "Gold food pattern"
+        ));
+        
+        MaidCommandProcessor.LOGGER.info("Initialized {} command patterns and {} item patterns", 
+            commandPatterns.size(), itemPatterns.size());
     }
     
     public static ChatResponse processChatMessage(
@@ -149,6 +185,10 @@ public class AIChatIntegration {
     
     public static List<CommandPattern> getCommandPatterns() {
         return Collections.unmodifiableList(new ArrayList<>(commandPatterns.values()));
+    }
+    
+    public static List<ItemPattern> getItemPatterns() {
+        return Collections.unmodifiableList(new ArrayList<>(itemPatterns.values()));
     }
     
     public static class ChatResponse {
