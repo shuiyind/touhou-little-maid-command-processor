@@ -81,6 +81,7 @@ public class CommandExecutorModule {
         // 命令去重：检查相同玩家+命令是否在冷却期内
         String commandKey = maidOwner.getStringUUID() + ":" + command;
         long currentTime = System.currentTimeMillis();
+        // CodeQl[local-variable-is-never-read] - lastExecTime is used in cooldown check below
         Long lastExecTime = recentCommands.get(commandKey);
         
         if (lastExecTime != null && (currentTime - lastExecTime) < COMMAND_DEDUP_WINDOW) {
