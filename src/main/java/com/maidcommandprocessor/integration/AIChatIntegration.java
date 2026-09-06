@@ -124,10 +124,11 @@ public class AIChatIntegration {
             commandPatterns.size(), itemPatterns.size());
     }
     
+    // CodeQl[unused-parameter] - maidEntity is reserved for future maid-specific chat processing
     public static ChatResponse processChatMessage(
             String chatText,
             ServerPlayer player,
-            Entity maidEntity) {
+            @SuppressWarnings("unused") Entity maidEntity) {
         
         MaidCommandConfig config = MaidCommandProcessor.config;
         
