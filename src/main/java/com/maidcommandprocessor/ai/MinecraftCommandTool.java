@@ -16,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MinecraftCommandTool implements ITool<MinecraftCommandTool.CommandResult> {
     
@@ -134,15 +133,5 @@ public class MinecraftCommandTool implements ITool<MinecraftCommandTool.CommandR
     @Override
     public Component invocationSummaryComponent(CommandResult result) {
         return Component.literal("Executing: " + result.command());
-    }
-}
-
-class BatchCommandResult {
-    public List<String> commands;
-    public String description;
-    
-    public BatchCommandResult(List<String> commands, String description) {
-        this.commands = commands;
-        this.description = description;
     }
 }

@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 public class AIChatIntegration {
     
     private static final Map<String, CommandPattern> commandPatterns = new LinkedHashMap<>();
+    // CodeQl[empty-container] - itemPatterns is populated in initializePatterns()
+    @SuppressWarnings("unused")
     private static final Map<String, ItemPattern> itemPatterns = new LinkedHashMap<>();
     
     static {

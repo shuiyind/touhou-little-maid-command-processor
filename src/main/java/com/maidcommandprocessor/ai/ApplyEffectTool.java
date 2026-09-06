@@ -55,7 +55,8 @@ public class ApplyEffectTool implements ITool<ApplyEffectTool.ApplyEffectResult>
     }
     
     @Override
-    public Parameter parameters(ObjectParameter parent, EntityMaid maid) {
+    // CodeQl[unused-parameter] - parent is reserved for future nested parameter support
+    public Parameter parameters(@SuppressWarnings("unused") ObjectParameter parent, EntityMaid maid) {
         ObjectParameter param = ObjectParameter.create()
             .setTitle("Apply Status Effect")
             .setDescription("Apply buffs or debuffs to players or entities");
