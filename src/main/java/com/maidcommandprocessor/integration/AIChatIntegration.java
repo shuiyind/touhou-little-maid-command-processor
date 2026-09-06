@@ -100,7 +100,26 @@ public class AIChatIntegration {
             PermissionLevel.ADVANCED
         ));
         
-        MaidCommandProcessor.LOGGER.info("Initialized {} command patterns", commandPatterns.size());
+        itemPatterns.put("diamond_sword", new ItemPattern(
+            "(?:钻石|diamond)\\s*(?:剑|sword|武器)",
+            "diamond_sword",
+            "Diamond sword pattern"
+        ));
+        
+        itemPatterns.put("iron_armor", new ItemPattern(
+            "(?:铁|iron)\\s*(?:甲|armor|装备)",
+            "iron_armor",
+            "Iron armor pattern"
+        ));
+        
+        itemPatterns.put("gold_food", new ItemPattern(
+            "(?:金|gold)\\s*(?:食物|food|面包)",
+            "gold_ingot",
+            "Gold food pattern"
+        ));
+        
+        MaidCommandProcessor.LOGGER.info("Initialized {} command patterns and {} item patterns", 
+            commandPatterns.size(), itemPatterns.size());
     }
     
     public static ChatResponse processChatMessage(
