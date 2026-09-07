@@ -380,7 +380,6 @@ public class CommandExecutorModule {
             return false;
         }
         
-        long cooldown = config.getChatResponseCooldown();
         if (System.currentTimeMillis() > cooldownEnd) {
             commandCooldowns.remove(maidId);
             return false;
