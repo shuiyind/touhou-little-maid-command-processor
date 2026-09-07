@@ -46,10 +46,18 @@ public class MaidCommandConfig {
 
         // Dangerous command blacklist
         builder.comment("Dangerous command blacklist").push("dangerous_commands");
-        List<String> defaultDangerousCommands = java.util.Arrays.asList(
-            "/kill @a", "/op @a", "/deop @a", "/ban", "/pardon",
-            "/gamemode 3", "/gamemode 0", "/difficulty hard", "/difficulty easy",
-            "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
+        List<String> defaultDangerousCommands = new java.util.ArrayList<>();
+        defaultDangerousCommands.add("/kill @a");
+        defaultDangerousCommands.add("/op @a");
+        defaultDangerousCommands.add("/deop @a");
+        defaultDangerousCommands.add("/ban");
+        defaultDangerousCommands.add("/pardon");
+        defaultDangerousCommands.add("/gamemode 3");
+        defaultDangerousCommands.add("/gamemode 0");
+        defaultDangerousCommands.add("/difficulty hard");
+        defaultDangerousCommands.add("/difficulty easy");
+        defaultDangerousCommands.add("/gamerule doDayNightCycle false");
+        defaultDangerousCommands.add("/gamerule keepInventory true");
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
             .defineList("dangerousCommands", defaultDangerousCommands, () -> new java.util.ArrayList<>(defaultDangerousCommands), s -> s instanceof String);
