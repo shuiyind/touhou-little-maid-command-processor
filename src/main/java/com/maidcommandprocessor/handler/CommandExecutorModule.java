@@ -43,7 +43,6 @@ public class CommandExecutorModule {
         vanillaCommands.add("weather");
         vanillaCommands.add("time");
         vanillaCommands.add("gamemode");
-        vanillaCommands.add("gamemode");
         vanillaCommands.add("clone");
         vanillaCommands.add("data");
         vanillaCommands.add("tag");

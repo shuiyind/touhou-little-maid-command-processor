@@ -91,7 +91,7 @@ public class VoiceInputModule {
     }
     
     public static String synthesizeSpeech(String text, String language) {
-        if (!MaidCommandProcessor.config.enableVoiceOutput.get()) {
+        if (!MaidCommandProcessor.config.enableVoiceOutput()) {
             return null;
         }
         

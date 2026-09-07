@@ -153,7 +153,7 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
     private LLMCallback handleGrant(String toolId, ServerPlayer grantor, ServerPlayer grantee, String description, LLMCallback callback) {
         if (!PermissionModule.canGrantPermission(grantor)) {
             return callback.addToolResult(toolId, 
-                "Cannot grant permission: You are not ADMIN or target player is already at the same/higher level");
+                "Cannot grant permission: You are not SERVER OWNER (ADMIN). Only ADMIN can manage player permissions.");
         }
         
         PermissionLevel currentLevel = PermissionModule.getPlayerPermission(grantee);
@@ -161,7 +161,7 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
         
         if (currentVal >= 3) {
             return callback.addToolResult(toolId, 
-                "Player '" + grantee.getName().getString() + "' is already at maximum permission level");
+                "Player '" + grantee.getName().getString() + "' is already at maximum permission level (ADMIN)");
         }
         
         PermissionLevel nextLevel = PermissionLevel.values()[currentVal + 1];
