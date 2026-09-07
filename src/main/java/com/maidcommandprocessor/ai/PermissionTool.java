@@ -151,7 +151,7 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
     }
     
     private LLMCallback handleGrant(String toolId, ServerPlayer grantor, ServerPlayer grantee, String description, LLMCallback callback) {
-        if (!PermissionModule.canGrantPermission(grantor, grantee)) {
+        if (!PermissionModule.canGrantPermission(grantor)) {
             return callback.addToolResult(toolId, 
                 "Cannot grant permission: You are not ADMIN or target player is already at the same/higher level");
         }

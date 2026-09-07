@@ -48,11 +48,9 @@ public class AINegotiationEngine {
         }
     }
     
-    // CodeQl[unused-container] - commandPatterns is populated in initializePatterns()
-    @SuppressWarnings("unused")
+    // Maps keyword to IntentType for command matching
     private static final Map<String, IntentType> commandPatterns = new ConcurrentHashMap<>();
-    // CodeQl[unused-container] - responsePatterns is populated in initializePatterns()
-    @SuppressWarnings("unused")
+    // Maps keyword to response text for chat responses
     private static final Map<String, String> responsePatterns = new ConcurrentHashMap<>();
     
     // 多语言关键词映射
@@ -127,8 +125,7 @@ public class AINegotiationEngine {
         responsePatterns.put("わかった", "わかりました、主人！");
     }
     
-    // CodeQl[unused-parameter] - permissionLevel is reserved for future permission checks
-    public static CommandIntent parseIntent(String chatText, @SuppressWarnings("unused") PermissionModule.PermissionLevel permissionLevel) {
+    public static CommandIntent parseIntent(String chatText, PermissionModule.PermissionLevel permissionLevel) {
         MaidCommandConfig config = MaidCommandProcessor.config;
         
         if (!config.enableChatResponse()) {
@@ -136,6 +133,11 @@ public class AINegotiationEngine {
         }
         
         chatText = chatText.toLowerCase();
+        
+        MaidCommandProcessor.LOGGER.info(
+            "Parsing intent for player with permission level {} from: {}",
+            permissionLevel, chatText
+        );
         
         // Check for command execution
         for (Map.Entry<String, IntentType> entry : commandPatterns.entrySet()) {

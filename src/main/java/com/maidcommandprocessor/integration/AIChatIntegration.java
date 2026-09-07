@@ -16,8 +16,6 @@ import java.util.regex.Pattern;
 public class AIChatIntegration {
     
     private static final Map<String, CommandPattern> commandPatterns = new LinkedHashMap<>();
-    // CodeQl[empty-container] - itemPatterns is populated in initializePatterns()
-    @SuppressWarnings("unused")
     private static final Map<String, ItemPattern> itemPatterns = new LinkedHashMap<>();
     
     static {
@@ -124,48 +122,6 @@ public class AIChatIntegration {
             commandPatterns.size(), itemPatterns.size());
     }
     
-    // CodeQl[unused-parameter] - maidEntity is reserved for future maid-specific chat processing
-    public static ChatResponse processChatMessage(
-            String chatText,
-            ServerPlayer player,
-            @SuppressWarnings("unused") Entity maidEntity) {
-        
-        MaidCommandConfig config = MaidCommandProcessor.config;
-        
-        if (!config.enableChatResponse()) {
-            return new ChatResponse(false, "AI Chat integration disabled", null);
-        }
-        
-        PermissionLevel playerPermission = PermissionModule.getPlayerPermission(player);
-        
-        for (Map.Entry<String, CommandPattern> entry : commandPatterns.entrySet()) {
-            CommandPattern pattern = entry.getValue();
-            
-            if (playerPermission.getLevel() < pattern.getRequiredPermission().getLevel()) {
-                continue;
-            }
-            
-            Matcher matcher = Pattern.compile(pattern.getPattern(), Pattern.CASE_INSENSITIVE).matcher(chatText);
-            
-            if (matcher.matches()) {
-                String command = pattern.getCommand();
-                
-                if (command.equals("give @p diamond_armor")) {
-                    command = generateGoodEquipmentCommand(player);
-                }
-                
-                MaidCommandProcessor.LOGGER.info(
-                    "Matched pattern [{}] for chat: {}",
-                    entry.getKey(), chatText
-                );
-                
-                return new ChatResponse(true, pattern.getDescription(), command);
-            }
-        }
-        
-        return new ChatResponse(false, "No matching command found", null);
-    }
-    
     private static String generateGoodEquipmentCommand(ServerPlayer player) {
         String playerName = player.getName().getString();
         return "give " + playerName + " diamond_armor";
@@ -192,21 +148,5 @@ public class AIChatIntegration {
     
     public static List<ItemPattern> getItemPatterns() {
         return Collections.unmodifiableList(new ArrayList<>(itemPatterns.values()));
-    }
-    
-    public static class ChatResponse {
-        private final boolean success;
-        private final String message;
-        private final String command;
-        
-        public ChatResponse(boolean success, String message, String command) {
-            this.success = success;
-            this.message = message;
-            this.command = command;
-        }
-        
-        public boolean isSuccess() { return success; }
-        public String getMessage() { return message; }
-        public String getCommand() { return command; }
     }
 }

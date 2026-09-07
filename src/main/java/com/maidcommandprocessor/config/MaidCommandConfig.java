@@ -50,10 +50,9 @@ public class MaidCommandConfig {
             "/kill @a", "/op @a", "/deop @a", "/ban", "/pardon",
             "/gamemode 3", "/gamemode 0", "/difficulty hard", "/difficulty easy",
             "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
-        // CodeQl[deprecated-call] - defineList is the recommended way for list configuration
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
-            .defineList("dangerousCommands", defaultDangerousCommands, s -> s instanceof String);
+            .defineListInRange("dangerousCommands", defaultDangerousCommands, s -> s instanceof String, 0, Integer.MAX_VALUE);
         minPermissionForDangerous = builder
             .comment("Minimum permission level to execute dangerous commands")
             .defineInRange("minPermissionForDangerous", 2, 1, 3);

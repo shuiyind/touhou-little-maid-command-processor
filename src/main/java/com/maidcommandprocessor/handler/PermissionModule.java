@@ -160,10 +160,7 @@ public class PermissionModule {
      * 检查是否可以授予权限（用于升级）
      * 只有 ADMIN (3级) 可以升级玩家权限
      */
-    // CodeQl[unused-parameter] - grantee is reserved for future grant validation
-    public static boolean canGrantPermission(
-            net.minecraft.server.level.ServerPlayer grantor,
-            @SuppressWarnings("unused") net.minecraft.server.level.ServerPlayer grantee) {
+    public static boolean canGrantPermission(net.minecraft.server.level.ServerPlayer grantor) {
         
         PermissionLevel grantorLevel = getPlayerPermission(grantor);
         

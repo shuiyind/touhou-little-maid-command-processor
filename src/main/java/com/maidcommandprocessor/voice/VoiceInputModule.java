@@ -58,7 +58,19 @@ public class VoiceInputModule {
         return true; // Placeholder - would check for whisper installation
     }
     
-    public static String recognizeSpeech(byte[] audioData, String format) {
+    private static String recognizeSpeechWithProvider(VoiceProvider provider, String format) {
+        // Placeholder for actual speech recognition implementation
+        MaidCommandProcessor.LOGGER.info(
+            "Recognizing speech with provider: {}, format: {}",
+            provider.getName(), format
+        );
+        
+        // In a real implementation, this would call the actual speech recognition API
+        // For now, return null to indicate no recognition yet
+        return null;
+    }
+    
+    public static String recognizeSpeech(String format) {
         if (!MaidCommandProcessor.config.enableVoiceOutput()) {
             return null;
         }
@@ -70,23 +82,11 @@ public class VoiceInputModule {
                 MaidCommandProcessor.LOGGER.info(
                     "Trying voice provider: {}", provider.getName()
                 );
-                return recognizeSpeechWithProvider(audioData, format, provider);
+                return recognizeSpeechWithProvider(provider, format);
             }
         }
         
         MaidCommandProcessor.LOGGER.warn("No voice provider available");
-        return null;
-    }
-    
-    private static String recognizeSpeechWithProvider(byte[] audioData, String format, VoiceProvider provider) {
-        // Placeholder for actual speech recognition implementation
-        MaidCommandProcessor.LOGGER.info(
-            "Recognizing speech with provider: {}, format: {}",
-            provider.getName(), format
-        );
-        
-        // In a real implementation, this would call the actual speech recognition API
-        // For now, return null to indicate no recognition yet
         return null;
     }
     

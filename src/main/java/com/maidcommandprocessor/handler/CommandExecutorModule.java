@@ -81,7 +81,6 @@ public class CommandExecutorModule {
         // 命令去重：检查相同玩家+命令是否在冷却期内
         String commandKey = maidOwner.getStringUUID() + ":" + command;
         long currentTime = System.currentTimeMillis();
-        // CodeQl[local-variable-is-never-read] - lastExecTime is used in cooldown check below
         Long lastExecTime = recentCommands.get(commandKey);
         
         if (lastExecTime != null && (currentTime - lastExecTime) < COMMAND_DEDUP_WINDOW) {
@@ -97,7 +96,7 @@ public class CommandExecutorModule {
         recentCommands.entrySet().removeIf(entry -> (currentTime - entry.getValue()) > 10000);
         
         // 验证并修复命令格式
-        command = validateAndFixCommand(command, maidOwner);
+        command = validateAndFixCommand(command);
         
         MaidCommandConfig config = MaidCommandProcessor.config;
         
@@ -406,8 +405,7 @@ public class CommandExecutorModule {
     /**
      * 验证并修复命令格式
      */
-    // CodeQl[unused-parameter] - player is reserved for future validation
-    private static String validateAndFixCommand(String command, @SuppressWarnings("unused") ServerPlayer player) {
+    private static String validateAndFixCommand(String command) {
         // 检查是否是 /give 命令
         if (command.startsWith("/give ")) {
             // 修复 NBT 标签位置问题
