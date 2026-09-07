@@ -55,7 +55,7 @@ public class ApplyEffectTool implements ITool<ApplyEffectTool.ApplyEffectResult>
     }
     
     @Override
-    public Parameter parameters(ObjectParameter parent, EntityMaid maid) {
+    public Parameter parameters(ObjectParameter unused, EntityMaid maid) {
         ObjectParameter param = ObjectParameter.create()
             .setTitle("Apply Status Effect")
             .setDescription("Apply buffs or debuffs to players or entities");
