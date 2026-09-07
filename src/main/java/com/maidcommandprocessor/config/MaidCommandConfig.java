@@ -52,7 +52,7 @@ public class MaidCommandConfig {
             "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
-            .defineListInRange("dangerousCommands", defaultDangerousCommands, s -> s instanceof String, 0, Integer.MAX_VALUE);
+            .defineList("dangerousCommands", defaultDangerousCommands, defaultDangerousCommands::clone, s -> s instanceof String);
         minPermissionForDangerous = builder
             .comment("Minimum permission level to execute dangerous commands")
             .defineInRange("minPermissionForDangerous", 2, 1, 3);
