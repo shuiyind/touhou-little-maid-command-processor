@@ -63,6 +63,7 @@ public class CommandExecutorModule {
     }
     
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         MaidCommandProcessor.LOGGER.info("CommandExecutorModule commands registered");
     }
@@ -115,7 +116,7 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        if (isInCooldown(maidEntity.getUUID(), config)) {
+        if (isInCooldown(maidEntity.getUUID())) {
             sourceStack.sendSystemMessage(
                 Component.translatable("maid_command_processor.error.on_cooldown")
             );
@@ -176,7 +177,7 @@ public class CommandExecutorModule {
             maidEntity.getUUID(), commands, maidOwner.getName().getString()
         );
         
-        if (isInCooldown(maidEntity.getUUID(), config)) {
+        if (isInCooldown(maidEntity.getUUID())) {
             sourceStack.sendSystemMessage(
                 Component.translatable("maid_command_processor.error.on_cooldown")
             );
@@ -370,16 +371,12 @@ public class CommandExecutorModule {
     }
     
     public static boolean isInCooldown(UUID maidId) {
-        MaidCommandConfig config = MaidCommandProcessor.config;
-        return isInCooldown(maidId, config);
-    }
-    
-    private static boolean isInCooldown(UUID maidId, MaidCommandConfig config) {
         Long cooldownEnd = commandCooldowns.get(maidId);
         if (cooldownEnd == null) {
             return false;
         }
         
+        // Check if cooldown has expired
         if (System.currentTimeMillis() > cooldownEnd) {
             commandCooldowns.remove(maidId);
             return false;

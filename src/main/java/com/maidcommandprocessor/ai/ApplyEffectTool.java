@@ -122,7 +122,7 @@ public class ApplyEffectTool implements ITool<ApplyEffectTool.ApplyEffectResult>
         
         try {
             // 构建效果命令
-            String command = buildEffectCommand(result, owner);
+            String command = buildEffectCommand(result);
             
             MaidCommandProcessor.LOGGER.info("Applying effect: {} to {} with command: {}", 
                 result.effectType(), result.target(), command);
@@ -162,7 +162,7 @@ public class ApplyEffectTool implements ITool<ApplyEffectTool.ApplyEffectResult>
         }
     }
     
-    private String buildEffectCommand(ApplyEffectResult result, ServerPlayer owner) {
+    private String buildEffectCommand(ApplyEffectResult result) {
         // 构建 /effect give 命令
         StringBuilder command = new StringBuilder();
         command.append("/effect give ");
