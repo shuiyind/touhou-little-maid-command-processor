@@ -3,7 +3,6 @@ package com.maidcommandprocessor.integration;
 import com.maidcommandprocessor.MaidCommandProcessor;
 import com.maidcommandprocessor.ai.AINegotiationEngine;
 import com.maidcommandprocessor.handler.CommandExecutorModule;
-import com.maidcommandprocessor.handler.CommandQueueModule;
 import com.maidcommandprocessor.handler.PermissionModule;
 import com.maidcommandprocessor.handler.PermissionModule.PermissionLevel;
 import net.minecraft.network.chat.Component;
@@ -11,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import com.github.tartaricacid.touhoulittlemaid.api.event.MaidTickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
@@ -87,16 +85,6 @@ public class LittleMaidIntegration {
             event.getEntity().getName().getString(),
             PermissionModule.getPlayerPermission((ServerPlayer) event.getEntity()).getName()
         );
-    }
-    
-    @SubscribeEvent
-    public static void onMaidTick(MaidTickEvent event) {
-        MaidCommandProcessor.LOGGER.debug(
-            "Maid tick event triggered for {}",
-            event.getMaid().getUUID()
-        );
-        
-        CommandQueueModule.executePendingCommands();
     }
     
     public static AINegotiationEngine.CommandIntent analyzeChatInput(
