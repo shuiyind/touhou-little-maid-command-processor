@@ -176,11 +176,6 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
     }
     
     private LLMCallback handleRevoke(String toolId, ServerPlayer revoker, ServerPlayer revokee, String description, LLMCallback callback) {
-        if (!PermissionModule.canRevokePermission(revoker, revokee)) {
-            return callback.addToolResult(toolId, 
-                "Cannot revoke permission: You are ADVANCED (管理员) and target must be BASIC (初级管理), or you are ADMIN");
-        }
-        
         String revokeeName = revokee.getName().getString();
         PermissionLevel currentLevel = PermissionModule.getPlayerPermission(revokee);
         
@@ -189,7 +184,13 @@ public class PermissionTool implements ITool<PermissionTool.PermissionResult> {
                 "Player '" + revokeeName + "' already has no permission");
         }
         
-        PermissionModule.revokePermission(revoker, revokee);
+        // Call revokePermission directly (it handles all permission checks internally)
+        boolean success = PermissionModule.revokePermission(revoker, revokee);
+        
+        if (!success) {
+            return callback.addToolResult(toolId, 
+                "Cannot revoke permission: revoker must be ADVANCED (管理员) and target must be BASIC (初级管理)");
+        }
         
         String response = "Successfully revoked permission from '" + revokeeName + "': " + 
             currentLevel.getName() + " → NONE\n" + description;
