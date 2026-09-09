@@ -1,5 +1,9 @@
 # Maid Command Processor - 女仆指令处理器
 
+> ⚠️ **免责声明 / Disclaimer**  
+> 本项目为新手个人借助AI开发的附属模组，代码质量和测试可能不够完善。**使用风险自负，包括但不限于游戏崩溃、存档损坏、指令执行异常等问题。**  
+> This project is developed by a beginner with AI assistance. Code quality and testing may be insufficient. **Use at your own risk, including but not limited to game crashes, save corruption, or unexpected command behavior.**
+
 车万女仆（Touhou Little Maid）的附属模组，让女仆能够通过AI对话系统智能执行Minecraft指令。
 
 ## 🎯 核心功能
