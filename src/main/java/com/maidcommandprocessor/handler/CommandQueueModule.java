@@ -37,6 +37,7 @@ public class CommandQueueModule {
     }
     
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public static void onMaidTick(MaidTickEvent event) {
         // Only process pending commands every 20 ticks to avoid excessive calls
         tickCounter++;
