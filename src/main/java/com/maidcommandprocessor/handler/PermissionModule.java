@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -37,7 +38,8 @@ public class PermissionModule {
         public String getName() { return name; }
     }
     
-    private static final Map<String, PermissionLevel> playerPermissions = new ConcurrentHashMap<>();
+    // Use UUID as key instead of player name (player name can change)
+    private static final Map<UUID, PermissionLevel> playerPermissions = new ConcurrentHashMap<>();
     
     public static void initialize(MinecraftServer srv) {
         server = srv;
@@ -46,11 +48,11 @@ public class PermissionModule {
     }
     
     public static PermissionLevel getPlayerPermission(net.minecraft.server.level.ServerPlayer player) {
-        String playerName = player.getName().getString();
+        UUID playerId = player.getUUID();
         
         // 检查是否有明确设置的权限
-        if (playerPermissions.containsKey(playerName)) {
-            return playerPermissions.get(playerName);
+        if (playerPermissions.containsKey(playerId)) {
+            return playerPermissions.get(playerId);
         }
         
         // 服务器主人（单人游戏）自动获得 ADMIN 权限
@@ -87,8 +89,9 @@ public class PermissionModule {
             return false;
         }
         
+        UUID targetId = target.getUUID();
         String targetName = target.getName().getString();
-        playerPermissions.put(targetName, newLevel);
+        playerPermissions.put(targetId, newLevel);
         
         // 自动保存权限数据
         savePermissions();
@@ -127,8 +130,9 @@ public class PermissionModule {
             return false;
         }
         
+        UUID revokeeId = revokee.getUUID();
         String revokeeName = revokee.getName().getString();
-        playerPermissions.remove(revokeeName); // 移除权限，回到 NONE
+        playerPermissions.remove(revokeeId); // 移除权限，回到 NONE
         
         // 自动保存权限数据
         savePermissions();
@@ -171,7 +175,20 @@ public class PermissionModule {
      * 获取所有玩家的权限列表
      */
     public static Map<String, PermissionLevel> getAllPermissions() {
-        return Collections.unmodifiableMap(playerPermissions);
+        // Convert UUID keys to string representation for external use
+        Map<String, PermissionLevel> nameMap = new HashMap<>();
+        for (Map.Entry<UUID, PermissionLevel> entry : playerPermissions.entrySet()) {
+            // Find player name by UUID
+            String name = "unknown_" + entry.getKey();
+            if (server != null) {
+                ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+                if (player != null) {
+                    name = player.getName().getString();
+                }
+            }
+            nameMap.put(name, entry.getValue());
+        }
+        return Collections.unmodifiableMap(nameMap);
     }
     
     /**
@@ -193,7 +210,16 @@ public class PermissionModule {
                 for (Map.Entry<String, String> entry : permissionMap.entrySet()) {
                     try {
                         PermissionLevel level = PermissionLevel.valueOf(entry.getValue());
-                        playerPermissions.put(entry.getKey(), level);
+                        // Try to resolve UUID from stored key
+                        UUID playerId;
+                        try {
+                            playerId = UUID.fromString(entry.getKey());
+                        } catch (IllegalArgumentException uuidEx) {
+                            // Not a valid UUID, generate one from name for backward compatibility
+                            playerId = UUID.fromString("00000000-0000-0000-0000-" + entry.getKey().replace(" ", ""));
+                        }
+                        playerPermissions.put(playerId, level);
+                        MaidCommandProcessor.LOGGER.info("Loaded permission for {}: {}", entry.getKey(), level.getName());
                     } catch (IllegalArgumentException e) {
                         MaidCommandProcessor.LOGGER.warn(
                             "Invalid permission level '{}' for player '{}'",
@@ -222,10 +248,10 @@ public class PermissionModule {
                 Files.createDirectories(parentDir);
             }
             
-            // 转换为字符串映射
+            // 转换为字符串映射 (UUID -> name for storage)
             Map<String, String> stringMap = new HashMap<>();
-            for (Map.Entry<String, PermissionLevel> entry : playerPermissions.entrySet()) {
-                stringMap.put(entry.getKey(), entry.getValue().name());
+            for (Map.Entry<UUID, PermissionLevel> entry : playerPermissions.entrySet()) {
+                stringMap.put(entry.getKey().toString(), entry.getValue().name());
             }
             
             String json = GSON.toJson(stringMap);

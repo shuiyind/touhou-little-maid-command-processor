@@ -22,6 +22,7 @@ public class CommandExecutorModule {
     private static final Map<UUID, Long> commandCooldowns = new ConcurrentHashMap<>();
     private static final Map<String, Long> recentCommands = new ConcurrentHashMap<>();
     private static final long COMMAND_DEDUP_WINDOW = 3000; // 3秒去重窗口
+    private static final long DEFAULT_COMMAND_COOLDOWN = 1000; // 默认命令冷却时间（毫秒）
     
     static {
         initializeVanillaCommands();
@@ -230,41 +231,48 @@ public class CommandExecutorModule {
     public static int executeBatchCommandsForQueue(
             UUID maidId,
             List<String> commands) {
-        
+
         MaidCommandConfig config = MaidCommandProcessor.config;
-        
+
         setCooldown(maidId, config);
-        
+
         MaidCommandProcessor.LOGGER.info(
             "Executing {} queued command(s) for maid [{}]",
             commands.size(), maidId
         );
-        
+
         int successCount = 0;
         for (String command : commands) {
-            try {
-                MaidCommandProcessor.LOGGER.info(
-                    "Executing queued command: [{}] for maid [{}]",
-                    command, maidId
-                );
-                
-                // We don't have direct access to CommandSourceStack here, so we'll skip permission check
-                // and just execute the command
-                
-                successCount++;
-            } catch (Exception e) {
-                MaidCommandProcessor.LOGGER.error(
-                    "Error executing queued command [{}]: {}",
-                    command, e.getMessage(), e
-                );
+            MaidCommandProcessor.LOGGER.info(
+                "Executing queued command: [{}] for maid [{}]",
+                command, maidId
+            );
+
+            // Use server command source for queued execution
+            var srv = MaidCommandProcessor.server;
+            if (srv != null) {
+                try {
+                    srv.getCommands().performPrefixedCommand(
+                        srv.createCommandSourceStack(),
+                        command
+                    );
+                    successCount++;
+                } catch (Exception e) {
+                    MaidCommandProcessor.LOGGER.error(
+                        "Error executing queued command [{}]: {}",
+                        command, e.getMessage(), e
+                    );
+                }
+            } else {
+                MaidCommandProcessor.LOGGER.warn("Server not available for queued command: {}", command);
             }
         }
-        
+
         MaidCommandProcessor.LOGGER.info(
             "Queued command execution complete: {}/{} succeeded for maid [{}]",
             successCount, commands.size(), maidId
         );
-        
+
         return successCount;
     }
     
@@ -366,7 +374,8 @@ public class CommandExecutorModule {
     }
     
     private static void setCooldown(UUID maidId, MaidCommandConfig config) {
-        long cooldown = config.getChatResponseCooldown();
+        // Use command-specific cooldown (default 1s), not chat response cooldown
+        long cooldown = DEFAULT_COMMAND_COOLDOWN;
         commandCooldowns.put(maidId, System.currentTimeMillis() + cooldown);
     }
     

@@ -10,12 +10,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.maidcommandprocessor.MaidCommandProcessor;
 import com.maidcommandprocessor.handler.CommandExecutorModule;
-import com.maidcommandprocessor.handler.CommandQueueModule;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-
-import java.util.List;
 
 public class MinecraftCommandTool implements ITool<MinecraftCommandTool.CommandResult> {
     
@@ -106,22 +103,10 @@ public class MinecraftCommandTool implements ITool<MinecraftCommandTool.CommandR
                 MaidCommandProcessor.LOGGER.info(response);
                 return callback.addToolResult(toolId, response);
             } else {
-                if (CommandExecutorModule.isInCooldown(maid.getUUID())) {
-                    CommandQueueModule.addPendingCommand(
-                        maid.getUUID(),
-                        result.command(),
-                        result.description(),
-                        owner,
-                        maid
-                    );
-                    String response = "Command queued for batch execution: " + result.command() + "\n" + result.description();
-                    MaidCommandProcessor.LOGGER.info(response);
-                    return callback.addToolResult(toolId, response);
-                } else {
-                    String response = "Command execution failed: " + result.command();
-                    MaidCommandProcessor.LOGGER.warn(response);
-                    return callback.addToolResult(toolId, response);
-                }
+                // executeCommand already sets cooldown before execution, so no need to check again here
+                String response = "Command execution failed: " + result.command();
+                MaidCommandProcessor.LOGGER.warn(response);
+                return callback.addToolResult(toolId, response);
             }
         } catch (Exception e) {
             String error_msg = "Error executing command '" + result.command() + "': " + e.getMessage();

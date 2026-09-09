@@ -1,6 +1,9 @@
 package com.maidcommandprocessor.handler;
 
 import com.maidcommandprocessor.MaidCommandProcessor;
+import com.github.tartaricacid.touhoulittlemaid.api.event.MaidTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
@@ -10,10 +13,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@EventBusSubscriber(modid = MaidCommandProcessor.MOD_ID)
 public class CommandQueueModule {
     
     private static final Map<UUID, List<PendingCommand>> pendingCommands = new ConcurrentHashMap<>();
     private static boolean hasPendingCommands = false;
+    // Track tick count to process pending commands every 20 ticks (1 second)
+    private static int tickCounter = 0;
+    private static final int PROCESS_INTERVAL = 20; // Process every 20 ticks
     
     public static class PendingCommand {
         public final String command;
@@ -29,6 +36,23 @@ public class CommandQueueModule {
         }
     }
     
+    @SubscribeEvent
+    public static void onMaidTick(MaidTickEvent event) {
+        // Only process pending commands every 20 ticks to avoid excessive calls
+        tickCounter++;
+        if (tickCounter % PROCESS_INTERVAL != 0) {
+            return;
+        }
+        
+        // Only process if there are pending commands
+        if (!hasPendingCommands) {
+            return;
+        }
+        
+        MaidCommandProcessor.LOGGER.debug("Processing pending commands at tick {}", tickCounter);
+        executePendingCommands();
+    }
+
     public static void addPendingCommand(UUID maidId, String command, String description, ServerPlayer player, Entity maidEntity) {
         pendingCommands.computeIfAbsent(maidId, k -> new ArrayList<>()).add(
             new PendingCommand(command, description, player, maidEntity)
@@ -44,51 +68,62 @@ public class CommandQueueModule {
         if (!hasPendingCommands) {
             return;
         }
-        
+
         List<UUID> maidsToProcess = new ArrayList<>(pendingCommands.keySet());
-        
+
         for (UUID maidId : maidsToProcess) {
             List<PendingCommand> commands = pendingCommands.get(maidId);
             if (commands == null || commands.isEmpty()) {
                 continue;
             }
-            
+
             MaidCommandProcessor.LOGGER.info(
                 "Executing {} pending command(s) for maid [{}]",
                 commands.size(), maidId
             );
-            
+
             List<String> commandStrings = new ArrayList<>();
             ServerPlayer player = null;
             Entity maidEntity = null;
-            
+
             for (PendingCommand cmd : commands) {
+                // Skip invalid entities
+                if (cmd.player == null || !cmd.player.isAlive()) {
+                    MaidCommandProcessor.LOGGER.warn("Skipping command - player is dead or null: {}", cmd.command);
+                    continue;
+                }
+                if (cmd.maidEntity == null || !cmd.maidEntity.isAlive()) {
+                    MaidCommandProcessor.LOGGER.warn("Skipping command - maid entity is dead or null: {}", cmd.command);
+                    continue;
+                }
+
                 commandStrings.add(cmd.command);
                 if (player == null) {
                     player = cmd.player;
                     maidEntity = cmd.maidEntity;
                 }
             }
-            
+
             if (commandStrings.isEmpty() || player == null || maidEntity == null) {
+                pendingCommands.remove(maidId);
                 continue;
             }
-            
+
             int successCount = CommandExecutorModule.executeBatchCommands(
                 player.createCommandSourceStack(),
                 commandStrings,
                 player,
                 maidEntity
             );
-            
+
             MaidCommandProcessor.LOGGER.info(
                 "Pending commands executed: {}/{} succeeded for maid [{}]",
                 successCount, commandStrings.size(), maidId
             );
-            
+
             pendingCommands.remove(maidId);
         }
-        
+
         if (pendingCommands.isEmpty()) {
             hasPendingCommands = false;
         }
