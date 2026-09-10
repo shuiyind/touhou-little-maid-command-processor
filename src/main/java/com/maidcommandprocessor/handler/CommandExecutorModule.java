@@ -125,7 +125,7 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID());
+        setCooldown(maidEntity.getUUID(), config);
 
         MaidCommandProcessor.LOGGER.info(
             "Maid [{}] executing command [{}] by player [{}]",
@@ -186,7 +186,7 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID());
+        setCooldown(maidEntity.getUUID(), config);
 
         int successCount = 0;
         for (String command : commands) {

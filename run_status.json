@@ -1,0 +1,25 @@
+﻿gh : Unknown JSON field: "steps"
+At line:15 char:4517
++ ... -processor; gh run view 34112267539 --json conclusion,steps 2>&1 | Ou ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Unknown JSON field: "steps":String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Available fields:
+  attempt
+  conclusion
+  createdAt
+  databaseId
+  displayTitle
+  event
+  headBranch
+  headSha
+  jobs
+  name
+  number
+  startedAt
+  status
+  updatedAt
+  url
+  workflowDatabaseId
+  workflowName
