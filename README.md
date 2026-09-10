@@ -1,21 +1,34 @@
 # Maid Command Processor - 女仆指令处理器
 
+[![License](https://img.shields.io/badge/license-LGPL--2.1-green)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-21-blue)](https://java.org/)
+[![NeoForge](https://img.shields.io/badge/NeoForge-21.1.249-orange)](https://neoforged.net/)
+[![Minecraft](https://img.shields.io/badge/MC-1.21.1-brightgreen)](https://minecraft.net/)
+
 > ⚠️ **免责声明 / Disclaimer**  
 > 本项目为新手个人借助AI开发的附属模组，代码质量和测试可能不够完善。**使用风险自负，包括但不限于游戏崩溃、存档损坏、指令执行异常等问题。**  
 > This project is developed by a beginner with AI assistance. Code quality and testing may be insufficient. **Use at your own risk, including but not limited to game crashes, save corruption, or unexpected command behavior.**
 
 车万女仆（Touhou Little Maid）的附属模组，让女仆能够通过AI对话系统智能执行Minecraft指令。
 
+## 🎯 快速链接
+
+- 📦 [版本发布](https://github.com/shuiyind/touhou-little-maid-command-processor/releases)
+- 🔍 [问题反馈](https://github.com/shuiyind/touhou-little-maid-command-processor/issues)
+- 💬 [讨论交流](https://github.com/shuiyind/touhou-little-maid-command-processor/discussions)
+
 ## 🎯 核心功能
 
 ### 1. AI 工具系统（5个自定义工具）
-- **`minecraft_command`** - 执行单个Minecraft指令
-- **`batch_command`** - 批量执行多条指令（自动优化）
-- **`permission`** - 权限管理（查询、设置、撤销）
-- **`item_check`** - 物品和附魔检查（支持MOD兼容）
-- **`apply_effect`** - 应用BUFF/DEBUFF效果（现实时间秒）
+| 工具 | ID | 描述 |
+|------|-----|------|
+| **minecraft_command** | `minecraft_command` | 执行单个Minecraft指令 |
+| **batch_command** | `batch_command` | 批量执行多条指令（自动优化） |
+| **permission** | `maid_permission` | 权限管理（查询、设置、撤销） |
+| **item_check** | `item_check` | 物品和附魔检查（支持MOD兼容） |
+| **apply_effect** | `apply_effect` | 应用BUFF/DEBUFF效果（现实时间秒） |
 
-### 2. 智能指令解析
+### 2. 智能指令解析示例
 ```
 玩家："给我力量3，24小时"
 AI解析：apply_effect(target="@s", effectType="strength", duration=86400, amplifier=2)
@@ -95,24 +108,41 @@ maid-command-processor/
 
 ## 🚀 快速开始
 
-### 环境要求
-- Java 21
-- NeoForge 1.21.1 (版本 21.1.249+)
-- 车万女仆（必需，版本 1.5.3+）
+### 系统要求
+- **Java**: 21+
+- **Minecraft**: 1.21.1
+- **NeoForge**: 21.1.249+
+- **车万女仆 (Touhou Little Maid)**: 1.5.3+（必需依赖）
 
-### 编译
+### 编译构建
 ```bash
-cd maid-command-processor
+# 克隆并进入项目目录
+git clone <repository-url>
+cd touhou-little-maid-command-processor
+
+# 使用 Gradle 构建
 ./gradlew build
+
+# Windows 用户使用：
+.\gradlew.bat build
 ```
 
-编译后的文件：`build/libs/maid-command-processor-1.0.0.jar`
+**输出文件**: `build/libs/maid_command_processor-1.0.0.jar`
 
-### 安装
-1. 确保已安装车万女仆 1.5.3+
-2. 将jar文件放入`mods`文件夹
-3. 启动游戏
-4. 配置文件生成于：`config/maid_command_processor-common.toml`
+### 安装步骤
+1. 确保已安装 **车万女仆 (Touhou Little Maid) 1.5.3+**
+2. 将编译后的 jar 文件放入 Minecraft 的 `mods` 文件夹
+3. 启动游戏，模组会自动加载并生成配置文件
+4. 配置文件位置：`config/maid_command_processor-common.toml`
+
+### 依赖项
+```toml
+[[dependencies.maid_command_processor]]
+modId = "touhoulittlemaid"
+mandatory = true  # 必需依赖
+versionRange = "[1.5.3,)"
+ordering = "NONE"
+side = "BOTH"
 
 ## 📋 配置说明
 
@@ -277,30 +307,58 @@ customTools.add(myTool);
 
 **总体完成度：约85%**
 
+## 🔨 CI/CD & 开发工具
+
+### GitHub Actions
+本项目使用 GitHub Actions 进行持续集成：
+- **Gradle Build** - 自动构建和测试
+- **CodeQL Analysis** - 静态代码安全分析
+- **Issue Manager** - 自动化 Issue 管理
+
+### 代码质量
+- ✅ JaCoCo 代码覆盖率检测
+- ✅ CodeQL 安全扫描
+- ✅ Gradle Configuration Cache（加速构建）
+
 ## 📝 更新日志
 
-### v1.1.0 (2026-09-05) - 当前版本
-- ✅ 新增 `apply_effect` 工具（BUFF/DEBUFF应用）
-- ✅ 新增 NBT标签自动修复功能
-- ✅ 持续时间改为现实时间（秒）
-- ✅ 优化权限查询返回消息格式
+### v1.0.0 (2026-09-10) - 当前版本
+- ✅ AI工具系统（5个自定义工具）
+- ✅ 4级权限管理系统
+- ✅ NBT标签自动修复功能
 - ✅ 智能批量命令执行策略
 - ✅ MOD兼容性管理器（动态注册表 + 标准清单）
 - ✅ 命令去重和冷却机制
-
-### v1.0.0 (2026-09-05) - 初始版本
-- ✅ 模块化架构设计
-- ✅ 基础AI工具系统
-- ✅ 权限系统（4级）
-- ✅ 命令执行模块
-- ✅ 配置系统
-- ✅ 中英文支持
+- ✅ BUFF/DEBUFF应用工具（现实时间秒）
+- ✅ 语音输入/输出模块框架
+- ✅ 反馈系统基础框架
+- ✅ 中英文双语支持
+- ✅ Gradle构建配置完整
 
 ## 📄 许可证
-LGPL-2.1
+[LGPL-2.1](LICENSE) - 自由软件许可证，允许修改和再分发。
 
 ## 🤝 贡献
-欢迎提交Issue和Pull Request！
+欢迎提交 Issue 和 Pull Request！
+
+### 开发环境搭建
+```bash
+# 克隆项目
+git clone <repository-url>
+cd touhou-little-maid-command-processor
+
+# 构建项目
+./gradlew build
+
+# 运行客户端测试
+./gradlew runClient
+
+# 生成数据文件（可选）
+./gradlew data
 
 ## 📧 反馈与问题
-如有问题或建议，请在 GitHub Issues 中提交！# Test
+如有问题或建议，请在 [GitHub Issues](https://github.com/shuiyind/touhou-little-maid-command-processor/issues) 中提交！
+
+---
+
+*Made with ❤️ by [shuiyind](https://github.com/shuiyind)*

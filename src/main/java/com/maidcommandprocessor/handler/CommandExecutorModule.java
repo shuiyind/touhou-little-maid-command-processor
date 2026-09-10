@@ -233,7 +233,9 @@ public class CommandExecutorModule {
             UUID maidId,
             List<String> commands) {
 
-        setCooldown(maidId);
+        MaidCommandConfig config = MaidCommandProcessor.config;
+
+        setCooldown(maidId, config);
 
         MaidCommandProcessor.LOGGER.info(
             "Executing {} queued command(s) for maid [{}]",
@@ -372,7 +374,7 @@ public class CommandExecutorModule {
         return false;
     }
     
-    private static void setCooldown(UUID maidId) {
+    private static void setCooldown(UUID maidId, MaidCommandConfig config) {
         // Use command-specific cooldown (default 1s), not chat response cooldown
         long cooldown = DEFAULT_COMMAND_COOLDOWN;
         commandCooldowns.put(maidId, System.currentTimeMillis() + cooldown);
