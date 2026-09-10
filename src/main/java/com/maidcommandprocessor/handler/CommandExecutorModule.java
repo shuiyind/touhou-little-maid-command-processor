@@ -64,9 +64,10 @@ public class CommandExecutorModule {
     }
     
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         MaidCommandProcessor.LOGGER.info("CommandExecutorModule commands registered");
+        // Forge requires this parameter; we use it to confirm the dispatcher is available
+        event.getDispatcher();
     }
     
     public static void initialize() {
@@ -124,8 +125,8 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
-        
+        setCooldown(maidEntity.getUUID());
+
         MaidCommandProcessor.LOGGER.info(
             "Maid [{}] executing command [{}] by player [{}]",
             maidEntity.getUUID(), command, maidOwner.getName().getString()
@@ -185,8 +186,8 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
-        
+        setCooldown(maidEntity.getUUID());
+
         int successCount = 0;
         for (String command : commands) {
             if (!canExecuteCommand(command, playerPermission, config)) {
