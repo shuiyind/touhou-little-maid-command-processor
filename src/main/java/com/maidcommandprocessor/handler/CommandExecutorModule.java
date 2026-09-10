@@ -67,7 +67,7 @@ public class CommandExecutorModule {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         MaidCommandProcessor.LOGGER.info("CommandExecutorModule commands registered");
         // Forge requires this parameter; we use it to confirm the dispatcher is available
-        var _dispatcher = event.getDispatcher();
+        event.getDispatcher();
     }
     
     public static void initialize() {
