@@ -64,9 +64,10 @@ public class CommandExecutorModule {
     }
     
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         MaidCommandProcessor.LOGGER.info("CommandExecutorModule commands registered");
+        // Forge requires this parameter; we use it to confirm the dispatcher is available
+        var _dispatcher = event.getDispatcher();
     }
     
     public static void initialize() {
@@ -124,8 +125,8 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
-        
+        setCooldown(maidEntity.getUUID());
+
         MaidCommandProcessor.LOGGER.info(
             "Maid [{}] executing command [{}] by player [{}]",
             maidEntity.getUUID(), command, maidOwner.getName().getString()
@@ -185,8 +186,8 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
-        
+        setCooldown(maidEntity.getUUID());
+
         int successCount = 0;
         for (String command : commands) {
             if (!canExecuteCommand(command, playerPermission, config)) {
@@ -232,9 +233,7 @@ public class CommandExecutorModule {
             UUID maidId,
             List<String> commands) {
 
-        MaidCommandConfig config = MaidCommandProcessor.config;
-
-        setCooldown(maidId, config);
+        setCooldown(maidId);
 
         MaidCommandProcessor.LOGGER.info(
             "Executing {} queued command(s) for maid [{}]",
@@ -373,7 +372,7 @@ public class CommandExecutorModule {
         return false;
     }
     
-    private static void setCooldown(UUID maidId, MaidCommandConfig config) {
+    private static void setCooldown(UUID maidId) {
         // Use command-specific cooldown (default 1s), not chat response cooldown
         long cooldown = DEFAULT_COMMAND_COOLDOWN;
         commandCooldowns.put(maidId, System.currentTimeMillis() + cooldown);

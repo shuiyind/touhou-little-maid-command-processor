@@ -33,7 +33,6 @@ public class MaidCommandConfig {
     public final ModConfigSpec.ConfigValue<List<? extends String>> dangerousCommands;
     public final ModConfigSpec.ConfigValue<Integer> minPermissionForDangerous;
 
-    @SuppressWarnings("deprecation")
     public MaidCommandConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
@@ -52,7 +51,9 @@ public class MaidCommandConfig {
             "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission")
-            .defineList("dangerousCommands", defaultDangerousCommands, s -> s instanceof String);
+            .list("dangerousCommands", defaultDangerousCommands)
+            .orElseThrow()
+            .build();
         minPermissionForDangerous = builder
             .comment("Minimum permission level to execute dangerous commands")
             .defineInRange("minPermissionForDangerous", 2, 1, 3);

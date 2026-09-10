@@ -53,10 +53,6 @@ public class AINegotiationEngine {
     // Maps keyword to response text for chat responses
     private static final Map<String, String> responsePatterns = new ConcurrentHashMap<>();
     
-    // 多语言关键词映射
-    private static final Map<String, List<String>> languageKeywords = new HashMap<>();
-    private static final Map<String, Map<String, String>> intentCommands = new ConcurrentHashMap<>();
-    
     static {
         initializePatterns();
         initializeMultilingualKeywords();

@@ -37,8 +37,10 @@ public class CommandQueueModule {
     }
     
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public static void onMaidTick(MaidTickEvent event) {
+        // Forge requires this parameter; we acknowledge it for static analysis
+        var _event = event;
+
         // Only process pending commands every 20 ticks to avoid excessive calls
         tickCounter++;
         if (tickCounter % PROCESS_INTERVAL != 0) {
