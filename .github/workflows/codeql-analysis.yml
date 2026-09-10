@@ -33,6 +33,13 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Resolve dependencies before CodeQL build
+        run: ./gradlew dependencies --no-daemon
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
