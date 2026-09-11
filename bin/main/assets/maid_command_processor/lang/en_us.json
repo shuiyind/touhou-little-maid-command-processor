@@ -1,0 +1,37 @@
+{
+  "maid_command_processor.info.title": "Maid Command Processor",
+  "maid_command_processor.info.version": "Version: %s",
+  "maid_command_processor.info.help": "Help: Use /maidcommand to manage maid commands",
+  "maid_command_processor.info.usage": "Usage: /maidcommand execute <command>",
+  "maid_command_processor.info.commands": "Loaded %d vanilla commands and %d maid mod commands",
+  
+  "maid_command_processor.command.success": "Success! Executed: %s",
+  "maid_command_processor.command.failure": "Failed to execute: %s",
+  "maid_command_processor.command.error": "Error: %s",
+  "maid_command_processor.command.test_result": "Maid Command Processor is working!",
+  "maid_command_processor.command.test_config": "Configuration loaded successfully",
+  "maid_command_processor.command.test_enable": "Maid commands enabled: %s",
+  
+  "maid_command_processor.error.commands_disabled": "Maid commands are currently disabled",
+  "maid_command_processor.error.command_not_allowed": "Command not allowed: %s",
+  "maid_command_processor.error.on_cooldown": "Command is on cooldown, please wait",
+  "maid_command_processor.error.execution_failed": "Execution failed: %s",
+  
+  "maid_command_processor.executor.success": "Command executed successfully: %s",
+  "maid_command_processor.executor.failure": "Command execution failed: %s",
+  "maid_command_processor.executor.error": "Error executing command: %s",
+  "maid_command_processor.executor.permission": "Player %s has permission level: %s (level %d)",
+  "maid_command_processor.executor.vanilla_commands": "Available Vanilla Commands:",
+  "maid_command_processor.executor.maid_commands": "Available Maid Mod Commands:",
+  
+  "maid_command_processor.permissions.title": "Permission System",
+  "maid_command_processor.permissions.info": "Permission levels: NONE, BASIC, ADVANCED, WHITELIST, ADMIN",
+  
+  "maid_command_processor.commands.title": "Command Compatibility",
+  "maid_command_processor.commands.vanilla_count": "Vanilla commands: %d",
+  "maid_command_processor.commands.maid_count": "Maid mod commands: %d",
+  
+  "maid_command_processor.ai_chat.matched": "AI matched command: %s",
+  "maid_command_processor.ai_chat.no_match": "No matching command found for: %s",
+  "maid_command_processor.ai_chat.executing": "Executing command: %s"
+}
