@@ -1,4 +1,4 @@
-package com.maidcommandprocessor;
+﻿package com.maidcommandprocessor;
 
 import com.maidcommandprocessor.ai.MaidToolRegistry;
 import com.maidcommandprocessor.config.MaidCommandConfig;
@@ -56,6 +56,7 @@ public class MaidCommandProcessor {
         event.enqueueWork(() -> {
             LOGGER.info("Maid Command Processor - Performing common setup");
             CommandExecutorModule.initialize();
+            LittleMaidIntegration.checkAndConnect();
             LittleMaidToolRegistry.initialize();
             MaidToolRegistry.registerTools();
             ModRegistryManager.initialize();

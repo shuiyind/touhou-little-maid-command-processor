@@ -1,4 +1,4 @@
-package com.maidcommandprocessor.handler;
+﻿package com.maidcommandprocessor.handler;
 
 import com.maidcommandprocessor.MaidCommandProcessor;
 import com.maidcommandprocessor.config.MaidCommandConfig;
@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,11 +63,6 @@ public class CommandExecutorModule {
     }
     
     @SubscribeEvent
-    public static void onRegisterCommands(RegisterCommandsEvent event) {
-        MaidCommandProcessor.LOGGER.info("CommandExecutorModule commands registered");
-        // Forge requires this parameter; we use it to confirm the dispatcher is available
-        event.getDispatcher();
-    }
     
     public static void initialize() {
         MaidCommandProcessor.LOGGER.info("CommandExecutorModule initialized");
@@ -125,7 +119,7 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
+        setCooldown(maidEntity.getUUID());
 
         MaidCommandProcessor.LOGGER.info(
             "Maid [{}] executing command [{}] by player [{}]",
@@ -186,7 +180,7 @@ public class CommandExecutorModule {
             return 0;
         }
         
-        setCooldown(maidEntity.getUUID(), config);
+        setCooldown(maidEntity.getUUID());
 
         int successCount = 0;
         for (String command : commands) {
@@ -235,7 +229,7 @@ public class CommandExecutorModule {
 
         MaidCommandConfig config = MaidCommandProcessor.config;
 
-        setCooldown(maidId, config);
+        setCooldown(maidId);
 
         MaidCommandProcessor.LOGGER.info(
             "Executing {} queued command(s) for maid [{}]",
@@ -374,7 +368,7 @@ public class CommandExecutorModule {
         return false;
     }
     
-    private static void setCooldown(UUID maidId, MaidCommandConfig config) {
+    private static void setCooldown(UUID maidId) {
         // Use command-specific cooldown (default 1s), not chat response cooldown
         long cooldown = DEFAULT_COMMAND_COOLDOWN;
         commandCooldowns.put(maidId, System.currentTimeMillis() + cooldown);
@@ -474,3 +468,5 @@ public class CommandExecutorModule {
         }
     }
 }
+
+
