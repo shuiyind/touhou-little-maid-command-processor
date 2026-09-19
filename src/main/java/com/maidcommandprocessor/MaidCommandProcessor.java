@@ -5,6 +5,7 @@ import com.maidcommandprocessor.config.MaidCommandConfig;
 import com.maidcommandprocessor.config.ModRegistryManager;
 import com.maidcommandprocessor.handler.CommandExecutorModule;
 import com.maidcommandprocessor.handler.PermissionModule;
+import com.maidcommandprocessor.integration.LittleMaidIntegration;
 import com.maidcommandprocessor.integration.LittleMaidToolRegistry;
 import com.maidcommandprocessor.registry.CommandRegistry;
 import com.mojang.logging.LogUtils;

@@ -51,7 +51,7 @@ public class MaidCommandConfig {
             "/gamerule doDayNightCycle false", "/gamerule keepInventory true");
         dangerousCommands = builder
             .comment("List of dangerous commands that require higher permission\n需要更高权限才能执行的危险指令列表")
-            .defineListAllowEmpty("dangerousCommands", defaultDangerousCommands, true);
+            .defineListAllowEmpty("dangerousCommands", defaultDangerousCommands, v -> true);
         minPermissionForDangerous = builder
             .comment("Minimum permission level to execute dangerous commands\n执行危险指令所需的最低权限等级")
             .defineInRange("minPermissionForDangerous", 2, 1, 3);
