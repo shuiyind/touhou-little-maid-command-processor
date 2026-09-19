@@ -225,9 +225,7 @@ public class CommandExecutorModule {
     
     public static int executeBatchCommandsForQueue(
             UUID maidId,
-            List<String> commands) {
-
-        MaidCommandConfig config = MaidCommandProcessor.config;
+        List<String> commands) {
 
         setCooldown(maidId);
 
