@@ -1,4 +1,4 @@
-﻿package com.maidcommandprocessor;
+package com.maidcommandprocessor;
 
 import com.maidcommandprocessor.ai.MaidToolRegistry;
 import com.maidcommandprocessor.config.MaidCommandConfig;

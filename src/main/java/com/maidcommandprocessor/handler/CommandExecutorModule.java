@@ -1,4 +1,4 @@
-﻿package com.maidcommandprocessor.handler;
+package com.maidcommandprocessor.handler;
 
 import com.maidcommandprocessor.MaidCommandProcessor;
 import com.maidcommandprocessor.config.MaidCommandConfig;

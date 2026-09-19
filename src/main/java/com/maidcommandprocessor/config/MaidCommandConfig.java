@@ -1,4 +1,4 @@
-﻿package com.maidcommandprocessor.config;
+package com.maidcommandprocessor.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
