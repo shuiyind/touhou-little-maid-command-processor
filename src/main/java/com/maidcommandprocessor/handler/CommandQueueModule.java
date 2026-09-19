@@ -38,7 +38,7 @@ public class CommandQueueModule {
     
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public static void onMaidTick(MaidTickEvent event) { // CodeQL [java/unused-parameter] event is required by @SubscribeEvent dispatch
+    public static void onMaidTick(MaidTickEvent event) { // nosem
         // Only process pending commands every 20 ticks to avoid excessive calls
         tickCounter++;
         if (tickCounter % PROCESS_INTERVAL != 0) {
