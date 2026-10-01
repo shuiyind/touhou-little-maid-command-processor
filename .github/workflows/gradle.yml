@@ -9,7 +9,7 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
