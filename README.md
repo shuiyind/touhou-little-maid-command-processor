@@ -126,7 +126,7 @@ cd touhou-little-maid-command-processor
 .\gradlew.bat build
 ```
 
-**输出文件**: `build/libs/maid_command_processor-1.0.0.jar`
+**输出文件**: `build/libs/maid_command_processor-1.0.1.jar`
 
 ### 安装步骤
 1. 确保已安装 **车万女仆 (Touhou Little Maid) 1.5.3+**
@@ -306,6 +306,8 @@ customTools.add(myTool);
 
 **总体完成度：约85%**
 
+> 语音模块和反馈系统目前为**实验性功能**，默认未启用，功能尚不完整，请以实际测试为准。
+
 ## 🔨 CI/CD & 开发工具
 
 ### GitHub Actions
@@ -315,13 +317,18 @@ customTools.add(myTool);
 - **Issue Manager** - 自动化 Issue 管理
 
 ### 代码质量
-- ✅ JaCoCo 代码覆盖率检测
 - ✅ CodeQL 安全扫描
 - ✅ Gradle Configuration Cache（加速构建）
 
 ## 📝 更新日志
 
-### v1.0.0 (2026-09-10) - 当前版本
+### v1.0.1 (2026-10-01) - 当前版本
+- ✅ 首个正式版本（v1.0.0 仅为 Pre-release，jar 缺少后续修复）
+- ✅ 仓库清理：移除误提交的调试产物和 bin/ 构建输出
+- ✅ 补全 LGPL-2.1 LICENSE 文件
+- ✅ 移除空转的 JaCoCo 覆盖率与独立测试 job（待后续补充单元测试）
+
+### v1.0.0 (2026-09-10) - Pre-release
 - ✅ AI工具系统（5个自定义工具）
 - ✅ 4级权限管理系统
 - ✅ NBT标签自动修复功能
