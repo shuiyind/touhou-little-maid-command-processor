@@ -74,7 +74,6 @@ maid-command-processor/
 │   │   ├── CommandExecutorModule.java     # 命令执行（含NBT自动修复）
 │   │   ├── CommandQueueModule.java        # 命令队列管理
 │   │   ├── CompatibleCommandsModule.java  # 兼容指令解析
-│   │   ├── MaidChatListener.java          # 聊天事件监听
 │   │   └── PermissionModule.java          # 权限管理逻辑
 │   │
 │   ├── config/                            # 配置系统

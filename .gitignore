@@ -22,6 +22,16 @@ Thumbs.db
 logs/
 *.log
 
+# Local debug/CI artifact dumps
+build_jobs.json
+run_status.json
+codeql_alerts.json
+codeql_alerts_full.json
+*.log
+
+# Local gradle user home / wrapper cache
+.gradle-user/
+
 # Runtime
 runs/
 temp/
@@ -56,3 +66,7 @@ src/generated/
 # OS files
 .DS_Store
 Thumbs.db
+
+# One-off local debug scripts
+check_alerts.py
+parse_alerts.py
